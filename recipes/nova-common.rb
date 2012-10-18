@@ -18,6 +18,7 @@
 #
 
 include_recipe "osops-utils::autoetchosts"
+include_recipe "osops-utils::repo"
 
 platform_options = node["nova"]["platform"]
 
@@ -41,6 +42,7 @@ rabbit_ip = IPManagement.get_ips_for_role("rabbitmq-server", "nova", node)[0]  #
 # nova::nova-setup does not need to be double escaped here
 nova_setup_info = get_settings_by_role("nova-setup", "nova")
 keystone = get_settings_by_role("keystone", "keystone")
+quantum = get_settings_by_role("quantum", "openstack")
 
 # find the node attribute endpoint settings for the server holding a given role
 ks_admin_endpoint = get_access_endpoint("keystone", "keystone", "admin-api")
@@ -52,6 +54,7 @@ novnc_proxy_endpoint = get_bind_endpoint("nova", "novnc")
 glance_endpoint = get_access_endpoint("glance-api", "glance", "api")
 nova_api_endpoint = get_access_endpoint("nova-api-os-compute", "nova", "api") || {}
 ec2_public_endpoint = get_access_endpoint("nova-api-ec2", "nova", "ec2-public") || {}
+quantum_endpoint = get_access_endpoint("quantum", "quantum", "api") || {}
 
 Chef::Log.debug("nova::nova-common:mysql_info|#{mysql_info}")
 Chef::Log.debug("nova::nova-common:rabbit_ip|#{rabbit_ip}")
@@ -65,6 +68,7 @@ Chef::Log.debug("nova::nova-common:novnc_proxy_endpoint|#{novnc_proxy_endpoint}"
 Chef::Log.debug("nova::nova-common:glance_endpoint|#{glance_endpoint}")
 Chef::Log.debug("nova::nova-common:nova_api_endpoint|#{nova_api_endpoint}")
 Chef::Log.debug("nova::nova-common:ec2_public_endpoint|#{ec2_public_endpoint}")
+Chef::Log.debug("nova::nova-common:quantum_endpoint|#{quantum_endpoint}")
 
 # TODO: need to re-evaluate this for accuracy
 template "/etc/nova/nova.conf" do
@@ -106,7 +110,12 @@ template "/etc/nova/nova.conf" do
     "ram_allocation_ratio" => node["nova"]["config"]["ram_allocation_ratio"],
     "snapshot_image_format" => node["nova"]["config"]["snapshot_image_format"],
     "start_guests_on_host_boot" => node["nova"]["config"]["start_guests_on_host_boot"],
-    "resume_guests_state_on_host_boot" => node["nova"]["config"]["resume_guests_state_on_host_boot"]
+    "resume_guests_state_on_host_boot" => node["nova"]["config"]["resume_guests_state_on_host_boot"],
+    "quantum_api_ipaddress" => quantum_endpoint["host"],
+    "quantum_api_port" => quantum_endpoint["port"],
+    "quantum_service_user" => quantum["quantum"]["service_user"],
+    "quantum_service_tenant_name" => quantum["quantum"]["service_tenant_name"],
+    "quantum_service_pass" => quantum["quantum"]["service_pass"]
   )
 end
 

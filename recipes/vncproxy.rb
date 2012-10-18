@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+include_recipe "osops-utils::repo"
 include_recipe "nova::nova-common"
 
 platform_options = node["nova"]["platform"]

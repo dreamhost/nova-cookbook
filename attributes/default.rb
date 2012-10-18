@@ -4,6 +4,8 @@ default["enable_monit"] = false  # OS provides packages
 default["developer_mode"] = false  # we want secure passwords by default
 ########################################################################
 
+default["openstack"]["nova"]["folsom"]["version"] = "2012.2+git201209242000~precise-0ubuntu1"
+
 default["nova"]["apply_patches"] = false
 
 default["nova"]["db"]["name"] = "nova"

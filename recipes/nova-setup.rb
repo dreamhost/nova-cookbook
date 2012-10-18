@@ -48,19 +48,19 @@ execute "nova-manage db sync" do
   not_if "nova-manage db version && test $(nova-manage db version) -gt 0"
 end
 
-node["nova"]["networks"].each do |net|
-    execute "nova-manage network create --label=#{net['label']}" do
-        command "nova-manage network create --multi_host='T' --label=#{net['label']} --fixed_range_v4=#{net['ipv4_cidr']} --num_networks=#{net['num_networks']} --network_size=#{net['network_size']} --bridge=#{net['bridge']} --bridge_interface=#{net['bridge_dev']} --dns1=#{net['dns1']} --dns2=#{net['dns2']}"
-        action :run
-        not_if "nova-manage network list | grep #{net['ipv4_cidr']}"
-    end
-end
+#node["nova"]["networks"].each do |net|
+#    execute "nova-manage network create --label=#{net['label']}" do
+#        command "nova-manage network create --multi_host='T' --label=#{net['label']} --fixed_range_v4=#{net['ipv4_cidr']} --num_networks=#{net['num_networks']} --network_size=#{net['network_size']} --bridge=#{net['bridge']} --bridge_interface=#{net['bridge_dev']} --dns1=#{net['dns1']} --dns2=#{net['dns2']}"
+#        action :run
+#        not_if "nova-manage network list | grep #{net['ipv4_cidr']}"
+#    end
+#end
 
-if node.has_key?(:floating) and node["nova"]["network"]["floating"].has_key?(:ipv4_cidr)
-  execute "nova-manage floating create" do
-    command "nova-manage floating create --ip_range=#{node["nova"]["network"]["floating"]["ipv4_cidr"]}"
-    action :run
-    not_if "nova-manage floating list"
-  end
-end
+#if node.has_key?(:floating) and node["nova"]["network"]["floating"].has_key?(:ipv4_cidr)
+#  execute "nova-manage floating create" do
+#    command "nova-manage floating create --ip_range=#{node["nova"]["network"]["floating"]["ipv4_cidr"]}"
+#    action :run
+#    not_if "nova-manage floating list"
+#  end
+#end
 

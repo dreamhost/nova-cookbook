@@ -19,7 +19,7 @@
 
 include_recipe "nova::nova-common"
 include_recipe "nova::api-metadata"
-include_recipe "nova::network"
+#include_recipe "nova::network"
 
 platform_options = node["nova"]["platform"]
 nova_compute_packages = platform_options["nova_compute_packages"]
