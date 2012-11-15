@@ -35,10 +35,12 @@ default_schedule_zone=<%= @default_schedule_zone %>
 ##### NETWORK #####
 network_api_class=nova.network.quantumv2.api.API
 quantum_admin_username=<%= @quantum_service_user %>
-quantum_admin_tenant=<%= @quantum_service_tenant_name %>
+quantum_admin_tenant_name=<%= @quantum_service_tenant_name %>
 quantum_admin_password=<%= @quantum_service_pass %>
 quantum_admin_auth_url=http://<%= @keystone_api_ipaddress %>:<%= @keystone_service_port %>/v2.0
 quantum_auth_strategy=keystone
+libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtOpenVswitchDriver
+firewall_driver=nova.virt.firewall.NoopFirewallDriver
 #network_manager=<%= @network_manager %>
 #--flat_interface=eth1
 #--flat_network_dhcp_start=10.20.1.2
